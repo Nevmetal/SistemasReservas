@@ -1,0 +1,39 @@
+﻿@model SistemaReservaCitas.Models.Cita
+@{
+    ViewData["Title"] = "Editar Cita";
+}
+<article class="flex h-screen flex-col items-center bg-gray-800 p-4">
+    <h1 class="text-2xl font-semibold text-white">Editar Cita</h1>
+
+    <form asp-action="Editar" class="mx-auto mt-10 max-w-sm" method="post">
+        <div class="mb-6 grid gap-6 md:grid-cols-2">
+            <div>
+                <label for="ClienteNombre" class="mb-2 block text-sm font-medium text-white">Nombre Completo</label>
+                <input asp-for="ClienteNombre" id="ClienteNombre" class="block w-full rounded-lg border border-gray-600 bg-gray-700 p-2.5 text-sm text-white placeholder-gray-400 focus:ring-blue-500 focus:border-blue-500" placeholder="Nombre Apellido" />
+                <span asp-validation-for="ClienteNombre" class="text-sm text-red-500"></span>
+            </div>
+           
+            <div>
+                <label for="ClienteEmail" class="mb-2 block text-sm font-medium text-white">Cliente Email</label>
+                <input asp-for="ClienteEmail" id="ClienteEmail" class="block w-full rounded-lg border border-gray-600 bg-gray-700 p-2.5 text-sm text-white placeholder-gray-400 focus:ring-blue-500 focus:border-blue-500" placeholder="email@email.com" />
+                <span asp-validation-for="ClienteEmail" class="text-sm text-red-500"></span>
+            </div>
+        </div>
+        <div class="mb-4">
+            <label for="Fecha" class="mb-2 block text-sm font-medium text-white">Fecha</label>
+            <input asp-for="Fecha" id="Fecha" type="datetime-local" class="block w-full rounded-lg border border-gray-600 bg-gray-700 p-2.5 text-sm text-white placeholder-gray-400 focus:ring-blue-500 focus:border-blue-500" />
+            <span asp-validation-for="Fecha" class="text-sm text-red-500"></span>
+        </div>
+
+        <div class="mb-4">
+            <label for="Servicio" class="mb-2 block text-sm font-medium text-white">Servicio</label>
+            <input asp-for="Servicio" id="Servicio" class="block w-full rounded-lg border border-gray-600 bg-gray-700 p-2.5 text-sm text-white placeholder-gray-400 focus:ring-blue-500 focus:border-blue-500" />
+            <span asp-validation-for="Servicio" class="text-sm text-red-500"></span>
+        </div>
+
+        <div class="flex items-center space-x-4">
+            <button type="submit" class="rounded-md bg-blue-600 px-6 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">Guardar</button>
+            <a asp-action="Index" class="rounded-md bg-gray-600 px-6 py-2 text-sm font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500">Cancelar</a>
+        </div>
+    </form>
+</article>

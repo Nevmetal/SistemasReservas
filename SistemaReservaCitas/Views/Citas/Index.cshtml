@@ -1,0 +1,106 @@
+﻿@model IEnumerable<SistemaReservaCitas.Models.Cita>
+@{
+    ViewData["Title"] = "Citas";
+}
+<article class="h-screen overflow-auto bg-gray-800 p-6">
+    <h1 class="mb-6 text-3xl font-semibold text-white">Lista de Citas</h1>
+    <table class="w-full text-left text-sm text-white">
+        <thead class="bg-gray-700 text-xs uppercase text-gray-400">
+            <tr>
+                <th scope="col" class="px-6 py-3">Cliente</th>
+                <th scope="col" class="px-6 py-3">Email</th>
+                <th scope="col" class="px-6 py-3">Fecha</th>
+                <th scope="col" class="px-6 py-3">Servicio</th>
+                <th scope="col" class="px-6 py-3">Estado</th>
+                <th scope="col" class="px-6 py-3">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var cita in Model)
+            {
+                <tr class="border-b border-gray-700 bg-gray-600">
+                    <td scope="row" class="whitespace-nowrap px-6 py-4 font-bold text-white">@cita.ClienteNombre</td>
+                    <td class="px-6 py-4">@cita.ClienteEmail</td>
+                    <td class="px-6 py-4">@cita.Fecha.ToString("yyyy-MM-dd HH:mm")</td>
+                    <td class="px-6 py-4">@cita.Servicio</td>
+                    <td class="px-6 py-4">@cita.Estado</td>
+                     <td class="space-x-2 space-y-2 px-6 py-4">
+                        <!-- Botón Editar -->
+                        <a href="@Url.Action("Editar", "Citas", new { id = cita.Id })" class="inline-block rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700" title="Editar Cita">
+                            <svg class="h-5 w-5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M21 12a1 1 0 0 0-1 1v6a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h6a1 1 0 0 0 0-2H5a3 3 0 0 0-3 3v14a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-6a1 1 0 0 0-1-1m-15 .76V17a1 1 0 0 0 1 1h4.24a1 1 0 0 0 .71-.29l6.92-6.93L21.71 8a1 1 0 0 0 0-1.42l-4.24-4.29a1 1 0 0 0-1.42 0l-2.82 2.83-6.94 6.93a1 1 0 0 0-.29.71m10.76-8.35 2.83 2.83-1.42 1.42-2.83-2.83ZM8 13.17l5.93-5.93 2.83 2.83L10.83 16H8Z" /></svg>
+                        </a>
+
+                        <!-- Botón Cumplido -->
+                        @if (cita.Estado == SistemaReservaCitas.Models.EstadoCita.Pendiente)
+                        {
+                            <button onclick="showModal('cumplido', '@cita.Id')" class="inline-block rounded-md bg-green-500 px-4 py-2 text-sm font-medium text-white hover:bg-green-700" title="Marca Cita como cumplida">
+                                <svg class="h-5 w-5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.7 7.2c-.4-.4-1-.4-1.4 0l-7.5 7.5-3.1-3.1c-.4-.4-1-.4-1.4 0s-.4 1 0 1.4l3.8 3.8c.2.2.4.3.7.3s.5-.1.7-.3l8.2-8.2c.4-.4.4-1 0-1.4" /></svg>
+                            </button>
+                        }
+
+                        <!-- Botón Cancelar -->
+                        @if (cita.Estado == SistemaReservaCitas.Models.EstadoCita.Pendiente)
+                        {
+                            <button onclick="showModal('cancelar', '@cita.Id')" class="inline-block rounded-md bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700" title="Cancelar Cita">
+                                <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" xml:space="preserve"><circle fill="none" stroke="#000" stroke-width="2" stroke-miterlimit="10" cx="16" cy="16" r="12" /><path fill="none" stroke="#000" stroke-width="2" stroke-miterlimit="10" d="m11.5 11.5 9 9m0-9-9 9" /></svg>
+                            </button>
+                        }
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+    <!-- Modal -->
+    <div id="popup-modal" tabindex="-1" class="h-[calc(100%-1rem)] z-10 fixed flex hidden max-h-full w-full items-center justify-center overflow-y-auto overflow-x-hidden md:inset-0">
+        <div class="relative max-h-full w-full max-w-2xl p-4">
+            <div class="relative rounded-lg bg-gray-700 shadow">
+                <button type="button" class="absolute end-2.5 top-3 ms-auto inline-flex h-8 w-8 items-center justify-center rounded-lg bg-transparent text-sm text-gray-400 hover:bg-gray-600 hover:text-white" onclick="hideModal()">
+                    <svg class="h-3 w-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                    </svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+                <div class="p-4 text-center md:p-5">
+                    <svg class="mx-auto mb-4 h-8 w-8 text-gray-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                    </svg>
+                    <h3 id="modal-message" class="mb-5 text-lg font-normal text-gray-400"></h3>
+                    <button id="modal-confirm-btn" onclick="hideModal()" type="button" class="inline-flex items-center rounded-lg bg-red-600 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-800">
+                        Si, Estoy Seguro
+                    </button>
+                    <button type="button" onclick="hideModal()" class="inline-flex items-center rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-sm font-medium text-gray-500 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300">
+                        No, Cancelar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</article>
+
+<script>
+    function showModal(action, citaId) {
+            const modal = document.getElementById('popup-modal');
+            const message = document.getElementById('modal-message');
+            const confirmButton = document.getElementById('modal-confirm-btn');
+
+            if (action === 'cumplido') {
+                message.textContent = "¿Está seguro de que desea marcar esta cita como completada?";
+                confirmButton.onclick = function () {
+                    window.location.href = "/Citas/MarcarCumplido/" + citaId;
+                };
+            } else if (action === 'cancelar') {
+                message.textContent = "¿Estás seguro de que deseas cancelar esta cita?";
+                confirmButton.onclick = function () {
+                    window.location.href = "/Citas/Cancelar/" + citaId;
+                };
+            }
+
+            modal.classList.remove('hidden'); // Muestra el modal
+        }
+
+        function hideModal() {
+            const modal = document.getElementById('popup-modal');
+            modal.classList.add('hidden'); // Oculta el modal
+        }
+</script>

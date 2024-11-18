@@ -1,0 +1,74 @@
+﻿@{
+    ViewData["Title"] = "Calendario de Citas";
+}
+<article class="h-screen overflow-y-auto p-4">
+<h1 class="mb-6 text-3xl font-semibold">Calendario de Citas</h1>
+
+<div id="calendar"></div>
+<!-- Modal -->
+    <div id="static-modal" class="h-[calc(100%-1rem)] z-10 fixed top-0 flex hidden max-h-full w-full items-center justify-center overflow-y-auto overflow-x-hidden md:inset-0">
+        <div class="relative max-h-full w-full max-w-2xl p-4">
+        <!-- Modal content -->
+        <div class="relative rounded-lg bg-gray-700 shadow">
+            <!-- Modal header -->
+            <div class="flex items-center justify-between rounded-t border-b border-gray-600 p-4 md:p-5">
+                <h3 class="text-xl font-semibold text-white">
+                    Detalles de la Cita
+                </h3>
+                <button type="button" class="ms-auto inline-flex h-8 w-8 items-center justify-center rounded-lg bg-transparent text-gray-400 hover:bg-gray-600 hover:text-white" onclick="toggleModal(false)">
+                    <svg class="h-3 w-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                    </svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+            </div>
+            <!-- Modal body -->
+            <div id="modal-body" class="space-y-4 p-4 md:p-5">
+                <!-- Aquí se mostrará la información de la cita -->
+            </div>
+            <!-- Modal footer -->
+            <div class="flex items-center rounded-b border-t border-gray-600 p-4 md:p-5">
+                <button type="button" onclick="toggleModal(false)" class="rounded-lg bg-blue-600 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-800">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+</article>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            locale: 'es',
+            height: '100%',
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay'
+            },
+            events: '/Citas/ObtenerCitas',
+            eventClick: function (info) {
+                // Llenar el contenido del modal con la información de la cita
+                document.getElementById('modal-body').innerHTML = `
+                        <p><strong>Cliente:</strong> ${info.event.extendedProps.clienteNombre}</p>
+                        <p><strong>Email:</strong> ${info.event.extendedProps.clienteEmail}</p>
+                        <p><strong>Fecha:</strong> ${info.event.start.toLocaleString()}</p>
+                        <p><strong>Servicio:</strong> ${info.event.extendedProps.servicio}</p>
+                        <p><strong>Estado:</strong> ${info.event.extendedProps.estado}</p>
+                    `;
+                toggleModal(true);
+            }
+        });
+        calendar.render();
+    });
+
+    // Función para mostrar u ocultar el modal
+    function toggleModal(show) {
+        const modal = document.getElementById('static-modal');
+        if (show) {
+            modal.classList.remove('hidden');
+        } else {
+            modal.classList.add('hidden');
+        }
+    }
+</script>

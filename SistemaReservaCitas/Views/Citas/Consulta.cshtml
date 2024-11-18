@@ -1,0 +1,50 @@
+﻿@model IEnumerable<SistemaReservaCitas.Models.Cita>
+@{
+    ViewData["Title"] = "Consulta de Citas";
+    var estadoSeleccionado = ViewData["EstadoFiltro"]?.ToString(); // Obtener el valor del filtro
+}
+
+<article class="h-screen overflow-auto bg-gray-800 p-6">
+    <h1 class="mb-6 text-3xl font-semibold text-white">Consulta de Citas</h1>
+
+    <!-- Formulario de filtro por estado -->
+    <form method="get" asp-action="Consulta" class="mb-6">
+        <label for="estadoFiltro" class="mb-2 block text-sm font-medium text-gray-200">Filtrar por Estado:</label>
+        <select id="estadoFiltro" name="estadoFiltro" onchange="this.form.submit()" class="block w-full rounded-md border border-gray-600 bg-gray-700 px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <!option value="" @(string.IsNullOrEmpty(estadoSeleccionado) ? "selected" : "")>Todos</!option>
+            <!option value="@SistemaReservaCitas.Models.EstadoCita.Pendiente" @(estadoSeleccionado == SistemaReservaCitas.Models.EstadoCita.Pendiente.ToString() ? "selected" : "")>Pendiente</!option>
+            <!option value="@SistemaReservaCitas.Models.EstadoCita.Cumplido" @(estadoSeleccionado == SistemaReservaCitas.Models.EstadoCita.Cumplido.ToString() ? "selected" : "")>Cumplido</!option>
+            <!option value="@SistemaReservaCitas.Models.EstadoCita.Cancelado" @(estadoSeleccionado == SistemaReservaCitas.Models.EstadoCita.Cancelado.ToString() ? "selected" : "")>Cancelado</!option>
+        </select>
+    </form>
+
+    <!-- Tabla de citas filtradas -->
+    <table class="min-w-full table-auto border-separate border-spacing-0 text-white">
+        <thead class="bg-gray-600">
+            <tr>
+                <th class="px-6 py-3 text-left text-sm font-medium text-gray-200">Cliente</th>
+                <th class="px-6 py-3 text-left text-sm font-medium text-gray-200">Email</th>
+                <th class="px-6 py-3 text-left text-sm font-medium text-gray-200">Fecha</th>
+                <th class="px-6 py-3 text-left text-sm font-medium text-gray-200">Servicio</th>
+                <th class="px-6 py-3 text-left text-sm font-medium text-gray-200">Estado</th>
+            </tr>
+        </thead>
+        <tbody class="bg-gray-700">
+            @foreach (var cita in Model)
+            {
+                <tr class="border-t border-gray-600">
+                    <td class="px-6 py-3 text-sm">@cita.ClienteNombre</td>
+                    <td class="px-6 py-3 text-sm">@cita.ClienteEmail</td>
+                    <td class="px-6 py-3 text-sm">@cita.Fecha.ToString("yyyy-MM-dd HH:mm")</td>
+                    <td class="px-6 py-3 text-sm">@cita.Servicio</td>
+                    <td class="px-6 py-3 text-sm
+@(cita.Estado.ToString() == SistemaReservaCitas.Models.EstadoCita.Pendiente.ToString() ? "bg-yellow-500" :
+    cita.Estado.ToString() == SistemaReservaCitas.Models.EstadoCita.Cumplido.ToString() ? "bg-green-500" :
+    cita.Estado.ToString() == SistemaReservaCitas.Models.EstadoCita.Cancelado.ToString() ? "bg-red-500" : "")">
+                        @cita.Estado
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</article>
